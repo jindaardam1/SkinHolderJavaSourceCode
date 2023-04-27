@@ -1,9 +1,11 @@
 package es.skinholder.main;
 
-import es.skinholder.utils.*;
 import org.apache.commons.lang3.StringUtils;
+import es.skinholder.utils.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static java.lang.System.in;
@@ -17,6 +19,7 @@ import static java.lang.System.out;
 public class Main {
     public static void main(String[] args) {
         try {
+            crearCarpetasNecesarias();
             boolean fin = false;
             while (!fin) {
                 Scanner scanner = new Scanner(in);
@@ -24,13 +27,55 @@ public class Main {
                 pinta();
                 int op = scanner.nextInt();
                 switch (op) {
-                    case 1 -> Registros.nuevoRegistro();
+                    case 1 -> {
+                        if (hayItems()) {
+                            Registros.nuevoRegistro();
+                        } else {
+                            out.println("\u001B[34mNo hay items registrados\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
                     case 2 -> Registros.anadirItem();
-                    case 3 -> Registros.modificarEliminarItem();
-                    case 4 -> Consultas.mostarHistorialPreciosItems();
-                    case 5 -> Consultas.mostarHistorialPreciosTotales();
-                    case 6 -> Consultas.mostrarRegistroConcreto();
-                    case 7 -> mostrarItems();
+                    case 3 -> {
+                        if (hayItems()) {
+                            Registros.modificarEliminarItem();
+                        } else {
+                            out.println("\u001B[34mNo hay items registrados\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
+                    case 4 -> {
+                        if (hayRegistros()) {
+                            Consultas.mostarHistorialPreciosItems();
+                        } else {
+                            out.println("\u001B[34mNo hay registros\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
+                    case 5 -> {
+                        if (hayRegistros()) {
+                            Consultas.mostarHistorialPreciosTotales();
+                        } else {
+                            out.println("\u001B[34mNo hay registros\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
+                    case 6 -> {
+                        if (hayRegistros()) {
+                            Consultas.mostrarRegistroConcreto();
+                        } else {
+                            out.println("\u001B[34mNo hay registros\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
+                    case 7 -> {
+                        if (hayItems()) {
+                            mostrarItems();
+                        } else {
+                            out.println("\u001B[34mNo hay items registrados\u001B[0m");
+                            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
+                        }
+                    }
                     case 8 -> fin = true;
                     case 11 -> OpcionesDesarrollador.mostrarLogs(); // Opción oculta para el usuario
                     default -> out.println("Introduce una opción válida");
@@ -109,5 +154,30 @@ public class Main {
         out.println("*\u001B[0m" + StringUtils.center("\u001B[31m8 - Salir\u001B[0m", 97) + "\u001B[33m*");
         out.println("*" + " ".repeat(88) + "*");
         out.println("*".repeat(90) + "\u001B[0m");
+    }
+
+    private static void crearCarpetasNecesarias() {
+        File carpetaItems = new File("Items");
+        if (!carpetaItems.exists()) {
+            if (carpetaItems.mkdir()) {
+                GeneradorLogs.logManager("DEBUG", "Se ha creado la carpeta Items");
+            }
+        }
+        File carpetaRegistros = new File("Registros");
+        if (!carpetaRegistros.exists()) {
+            if (carpetaRegistros.mkdir()) {
+                GeneradorLogs.logManager("DEBUG", "Se ha creado la carpeta Registros");
+            }
+        }
+    }
+
+    private static boolean hayItems() {
+        File carpetaItems = new File("Items");
+        return Objects.requireNonNull(carpetaItems.listFiles()).length > 0;
+    }
+
+    private static boolean hayRegistros() {
+        File carpetaRegistros = new File("Registros");
+        return Objects.requireNonNull(carpetaRegistros.listFiles()).length > 0;
     }
 }
