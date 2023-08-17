@@ -33,7 +33,7 @@ public class Registros {
         try {
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            Logs.errorLogManager(e);
         }
 
         // Crea una instancia de Items y un ArrayList vacío de PrecioNombreCantidad para ir almacenando los precios, nombres y cantidades de los productos
@@ -89,7 +89,7 @@ public class Registros {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Logs.errorLogManager(e);
             }
         }
 
@@ -114,7 +114,7 @@ public class Registros {
         System.out.println("*" + " ".repeat(88) + "*");
         System.out.println("*".repeat(90));
         System.out.println("*" + " ".repeat(88) + "*");
-        System.out.println("*\u001B[0m" + StringUtils.center("Al vender restando la comisión de Steam \u001B[32m" + String.format("%.2f", total * 0.8333) + "€\u001B[0m", 97) + "\u001B[34m*");
+        System.out.println("*\u001B[0m" + StringUtils.center("Al vender restando la comisión de Steam \u001B[32m" + String.format("%.2f", total * 0.87) + "€\u001B[0m", 97) + "\u001B[34m*");
         System.out.println("*" + " ".repeat(88) + "*");
         System.out.println("*".repeat(90) + "\u001B[0m\n");
 
@@ -136,7 +136,7 @@ public class Registros {
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            Logs.errorLogManager(e);
         }
         assert dBuilder != null;
         Document documento = dBuilder.newDocument();
@@ -180,9 +180,7 @@ public class Registros {
         try {
             transformer = transformerFactory.newTransformer();
         } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
         assert transformer != null;
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -191,23 +189,17 @@ public class Registros {
         StreamResult result = new StreamResult(new File(rutaRegistro));
         try {
             transformer.transform(source, result);
-        } catch (TransformerException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
         } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
 
         // Imprimir mensaje de éxito al guardar el registro
         System.out.println("Registro guardado con éxito en \u001B[32mRegistros\\" + fechaHoraActual +".xml\u001B[0m");
-        GeneradorLogs.logManager("INFO", "Registro guardado con éxito en Registros/" + fechaHoraActual + ".xml");
+        Logs.infoLogManager("Registro guardado con éxito en Registros/" + fechaHoraActual + ".xml");
         try {
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
         } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -306,13 +298,21 @@ public class Registros {
             String id = scanner.next();
 
             // Solicita al usuario que introduzca la cantidad del item
-            System.out.println("\u001B[32m*".repeat(90));
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[0m" + StringUtils.center("Introduce la \u001B[34mcantidad\u001B[0m que tienes de este item:", 97) + "\u001B[32m*");
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*".repeat(90));
-            int cantidad = scanner.nextInt();
-            scanner.nextLine(); // Consume la línea en blanco que queda en el buffer después de nextInt()
+            int cantidad = 0;
+            while (cantidad < 1) {
+                System.out.println("\u001B[32m*".repeat(90));
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*\u001B[0m" + StringUtils.center("Introduce la \u001B[34mcantidad\u001B[0m que tienes de este item:", 97) + "\u001B[32m*");
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*".repeat(90));
+                try {
+                    cantidad = scanner.nextInt();
+                    scanner.nextLine(); // Consume la línea en blanco que queda en el buffer después de nextInt()
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
 
             // Solicita al usuario que introduzca el nombre del item
             System.out.println("\u001B[32m*".repeat(90));
@@ -329,8 +329,7 @@ public class Registros {
             // Espera a que el usuario presione Enter para continuar
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -397,14 +396,13 @@ public class Registros {
             // Muestra un mensaje de confirmación al usuario
             System.out.println("\u001B[32mNuevo item añadido correctamente.\u001B[0m");
             // Guarda el log del usuario añadido
-            GeneradorLogs.logManager("INFO", "Se ha añadido un nuevo item: " + nombre);
+            Logs.infoLogManager("Se ha añadido un nuevo item " + nombre);
         } catch (ParserConfigurationException | TransformerException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         } catch (Exception e) {
             System.out.println("\u001B[31mNo se ha creado el item.\u001B[0m");
             System.out.println("No introducir caracteres con tildes ni otros caracteres especiales.");
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -425,51 +423,71 @@ public class Registros {
             items.mostrarItems();
 
             // Pide al usuario que seleccione un item
-            System.out.println("\u001B[31m*".repeat(90));
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[0m" + StringUtils.center("¿Qué item quieres \u001B[33mmodificar\u001B[0m/\u001B[31meliminar\u001B[0m?", 106) + "\u001B[31m*");
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*".repeat(90) + "\u001B[0m");
+
             Scanner scanner = new Scanner(System.in);
 
             // Si el usuario ingresa un número, se procede a buscar el item correspondiente
-            if (scanner.hasNextInt()) {
-                int op = scanner.nextInt();
-                scanner.nextLine();
-                TreeSet<String> keySet = new TreeSet<>(items.getItems().keySet());
-                String nombreItem = (String) keySet.toArray()[op - 1];
 
-                // Pide al usuario que elija entre modificar o eliminar el item seleccionado
+            int op = 0;
+            while (op < 1 || op > items.items.size()) {
+                System.out.println("\u001B[31m*".repeat(90));
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*\u001B[0m" + StringUtils.center("¿Qué item quieres \u001B[33mmodificar\u001B[0m/\u001B[31meliminar\u001B[0m?", 106) + "\u001B[31m*");
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*".repeat(90) + "\u001B[0m");
+                try {
+                    op = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
+            TreeSet<String> keySet = new TreeSet<>(items.getItems().keySet());
+            String nombreItem = (String) keySet.toArray()[op - 1];
+
+            // Pide al usuario que elija entre modificar o eliminar el item seleccionado
+            int eliminarOModificar = 0;
+            while (eliminarOModificar < 1 || eliminarOModificar > 2) {
                 System.out.println("\u001B[31m*".repeat(90));
                 System.out.println("*" + " ".repeat(88) + "*");
                 System.out.println("*\u001B[0m" + StringUtils.center("¿Quieres eliminarlo \u001B[34m(introduce 1)\u001B[0m o modificar la cantidad \u001B[34m(introduce 2)\u001B[0m?", 106) + "\u001B[31m*");
                 System.out.println("*" + " ".repeat(88) + "*");
                 System.out.println("*".repeat(90) + "\u001B[0m");
+                try {
+                    eliminarOModificar = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
 
-                int eliminarOModificar = scanner.nextInt();
 
-                // Según la elección del usuario, se llama al método eliminarItem o modificarItem
-                switch (eliminarOModificar) {
-                    case 1 -> eliminarItem(nombreItem);
-                    case 2 -> {
+            // Según la elección del usuario, se llama al método eliminarItem o modificarItem
+            switch (eliminarOModificar) {
+                case 1 -> eliminarItem(nombreItem);
+                case 2 -> {
+                    int nuevaCant = 0;
+                    while (nuevaCant < 1) {
                         System.out.println("\u001B[31m*".repeat(90));
                         System.out.println("*" + " ".repeat(88) + "*");
                         System.out.println("*\u001B[0m" + StringUtils.center("Ingresa la \u001B[34mnueva cantidad:\u001B[0m", 97) + "\u001B[31m*");
                         System.out.println("*" + " ".repeat(88) + "*");
                         System.out.println("*".repeat(90) + "\u001B[0m");
-                        modificarItem(nombreItem, scanner.nextInt());
+                        try {
+                            nuevaCant = scanner.nextInt();
+                        } catch (InputMismatchException e) {
+                            Logs.errorLogManager(e);
+                            scanner.nextLine();
+                        }
                     }
-                    default -> System.out.println("Introduce una opción válida");
+                    modificarItem(nombreItem, nuevaCant);
                 }
-            } else {
-                System.out.println("Introduce una opción válida");
             }
 
             // Pausa la consola para que el usuario tenga tiempo de leer el mensaje final
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -488,11 +506,12 @@ public class Registros {
         try {
             if (archivoABorrar.delete()) {
                 System.out.println("\u001B[32mEl archivo se ha eliminado correctamente.\u001B[0m");
-                GeneradorLogs.logManager("INFO", "Se ha eliminado un item: " + nombreItem);
+                Logs.infoLogManager("Se ha eliminado un item: " + nombreItem);
             }
         } catch (Exception e) {
             System.out.println("\u001B[31mNo se ha podido eliminar el archivo.\u001B[0m");
-            GeneradorLogs.errorLogManager(e);
+
+            Logs.errorLogManager(e);
         }
     }
 
@@ -537,11 +556,11 @@ public class Registros {
 
             // Se muestra un mensaje indicando que la cantidad se ha actualizado correctamente.
             System.out.println("\u001B[32mLa cantidad se ha actualizado correctamente.\u001B[0m");
-            GeneradorLogs.logManager("INFO", "La cantidad del item [" + nombreItem + "] se ha actualizado correctamente a " + nuevaCantidad);
+            Logs.infoLogManager("La cantidad del item [" + nombreItem + "] se ha actualizado correctamente a " + nuevaCantidad);
         }  catch (XPathExpressionException | ParserConfigurationException | IOException | TransformerException | SAXException e) {
             // Se muestra un mensaje de error si ocurre alguna excepción durante la ejecución del método.
             System.out.println("\u001B[31mError al modificar la cantidad del item.\u001B[0m");
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 }

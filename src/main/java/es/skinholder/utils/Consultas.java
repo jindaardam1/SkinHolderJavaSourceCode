@@ -51,15 +51,25 @@ public class Consultas {
             // Crea un TreeSet para ordenar los items alfabéticamente
             TreeSet<String> itemsSetOrdenado = new TreeSet<>(itemsSet);
             int contador = 1;
-            // Muestra la lista de items disponibles
-            items.mostrarItems();
-            System.out.println("\u001B[32m*".repeat(90));
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[0m" + StringUtils.center("¿Qué item quieres ver?", 88) + "\u001B[32m*");
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*".repeat(90) + "\u001B[0m");
+
             // Obtiene la selección del usuario
-            int itemSeleccionado = scanner.nextInt();
+            int itemSeleccionado = 0;
+            while (itemSeleccionado < 1 || itemSeleccionado > items.items.size()) {
+                // Muestra la lista de items disponibles
+                items.mostrarItems();
+                System.out.println("\u001B[32m*".repeat(90));
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*\u001B[0m" + StringUtils.center("¿Qué item quieres ver?", 88) + "\u001B[32m*");
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*".repeat(90) + "\u001B[0m");
+                try {
+                    itemSeleccionado = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
+
             String itemABuscar = null;
             // Itera sobre el conjunto de items y encuentra el item seleccionado por el usuario
             for (String s : itemsSetOrdenado) {
@@ -68,16 +78,27 @@ public class Consultas {
                 }
                 contador++;
             }
-            // Pide al usuario que introduzca la cantidad de registros que desea ver
-            System.out.println("\u001B[32m*".repeat(90));
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[0m" + StringUtils.center("Introduce cuántos de los últimos registros quieres ver:", 88) + "\u001B[32m*");
-            System.out.println("*\u001B[0m" + StringUtils.center("\u001B[34m(Máximo de registros disponibles: " + registros.size() + ")\u001B[0m", 97) + "\u001B[32m*");
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*".repeat(90) + "\u001B[0m");
-            int cantidad = scanner.nextInt();
+
+            int cantidad = 0;
+            while (cantidad < 1) {
+                // Pide al usuario que introduzca la cantidad de registros que desea ver
+                System.out.println("\u001B[32m*".repeat(90));
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*\u001B[0m" + StringUtils.center("Introduce cuántos de los últimos registros quieres ver:", 88) + "\u001B[32m*");
+                System.out.println("*\u001B[0m" + StringUtils.center("\u001B[34m(Máximo de registros disponibles: " + registros.size() + ")\u001B[0m", 97) + "\u001B[32m*");
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*".repeat(90) + "\u001B[0m");
+                try {
+                    cantidad = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
+
             // Limita la cantidad de registros a la cantidad disponible si el usuario introduce un número mayor
             if (cantidad > registros.size()) { cantidad = registros.size(); }
+
             // Itera sobre el TreeMap "registros" y muestra los registros correspondientes al item seleccionado por el usuario
             int iteraciones = 0;
             System.out.println("\u001B[33m*".repeat(90));
@@ -97,8 +118,7 @@ public class Consultas {
             }
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -140,8 +160,7 @@ public class Consultas {
 
 
         }  catch (XPathExpressionException | IOException | ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
         return items;
     }
@@ -177,13 +196,24 @@ public class Consultas {
 
             // Obtiene la cantidad de registros que se mostrarán.
             Scanner scanner = new Scanner(System.in);
-            System.out.println("\u001B[31m*".repeat(90));
-            System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[0m" + StringUtils.center("Introduce cuántos de los últimos registros quieres ver: ", 88) + "\u001B[31m*");
-            System.out.println("*\u001B[0m" + StringUtils.center("\u001B[34m(Máximo de registros disponibles: " + registros.size() + ")\u001B[0m", 97) + "\u001B[31m*");
-            System.out.println("*" + " ".repeat(88) + "* ");
-            System.out.println("*".repeat(90) + "\u001B[0m");
-            int cantidad = scanner.nextInt();
+
+            int cantidad = 0;
+            while (cantidad < 1) {
+                System.out.println("\u001B[31m*".repeat(90));
+                System.out.println("*" + " ".repeat(88) + "*");
+                System.out.println("*\u001B[0m" + StringUtils.center("Introduce cuántos de los últimos registros quieres ver: ", 88) + "\u001B[31m*");
+                System.out.println("*\u001B[0m" + StringUtils.center("\u001B[34m(Máximo de registros disponibles: " + registros.size() + ")\u001B[0m", 97) + "\u001B[31m*");
+                System.out.println("*" + " ".repeat(88) + "* ");
+                System.out.println("*".repeat(90) + "\u001B[0m");
+                try {
+                    cantidad = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    Logs.errorLogManager(e);
+                    scanner.nextLine();
+                }
+            }
+
+            // Si el usuario introduce una cantidad mayor a la que hay la iguala a la cantidad máxima
             if (cantidad > registros.size()) { cantidad = registros.size(); }
 
             // Muestra los registros en orden descendente por su fecha de creación.
@@ -208,8 +238,7 @@ public class Consultas {
             // Espera a que el usuario presione una tecla para continuar.
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -237,8 +266,7 @@ public class Consultas {
             // Obtiene el valor del atributo "total" del primer elemento "registro" del archivo XML
             totalString = xpath.compile("/registro/@total").evaluate(doc);
         } catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
 
         // Convierte el valor del atributo "total" a un valor de tipo float y lo retorna
@@ -322,8 +350,7 @@ public class Consultas {
             // Espera a que el usuario presione una tecla para continuar.
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (XPathExpressionException | IOException | ParserConfigurationException | InterruptedException | SAXException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -335,7 +362,7 @@ public class Consultas {
      */
     private static File escogerRegistroAMostrar(ArrayList<File> archivosXML) {
         // Se recorre la lista de archivos y se imprime por consola cada uno de ellos.
-        int c = 0;
+        int c = 1;
         System.out.println("\u001B[31m*".repeat(90));
         for (File archivo : archivosXML) {
             System.out.println("\u001B[31m*" + " ".repeat(88) + "*");
@@ -347,15 +374,23 @@ public class Consultas {
         }
 
         // Se solicita al usuario que elija el archivo que desea visualizar.
-        System.out.println("\u001B[32m*".repeat(90));
-        System.out.println("*" + " ".repeat(88) + "*");
-        System.out.println("*\u001B[0m" + StringUtils.center("¿Qué registro quieres ver?", 88) + "\u001B[32m*");
-        System.out.println("*" + " ".repeat(88) + "*");
-        System.out.println("*".repeat(90) + "\u001B[0m");
         Scanner scanner = new Scanner(System.in);
-        int op = scanner.nextInt();
+        int op = 0;
+        while (op < 1 || op > archivosXML.size()) {
+            System.out.println("\u001B[32m*".repeat(90));
+            System.out.println("*" + " ".repeat(88) + "*");
+            System.out.println("*\u001B[0m" + StringUtils.center("¿Qué registro quieres ver?", 88) + "\u001B[32m*");
+            System.out.println("*" + " ".repeat(88) + "*");
+            System.out.println("*".repeat(90) + "\u001B[0m");
+            try {
+                op = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                Logs.errorLogManager(e);
+                scanner.nextLine();
+            }
+        }
 
         // Se retorna el archivo elegido por el usuario.
-        return archivosXML.get(op);
+        return archivosXML.get(op - 1);
     }
 }

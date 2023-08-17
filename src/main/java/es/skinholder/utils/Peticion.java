@@ -78,9 +78,9 @@ public class Peticion {
                 if (c == NUMERO_MAXIMO_INTENTOS) {
                     System.out.println("\u001B[34m*\u001B[0m" + StringUtils.center(e.toString(), 88) + "\u001B[34m*\u001B[0m");
                     respuesta = "";
-                    GeneradorLogs.errorLogManager(e);
+                    Logs.errorLogManager(e);
                 } else {
-                    GeneradorLogs.logManager("DEBUG", "Petición fallo número " + c + " por la causa: " + e.getMessage());
+                    Logs.debugLogManager("Petición fallo número " + (c + 1) + " por la causa: " + e.getMessage());
                 }
                 c++;
                 fallo = true;
@@ -89,8 +89,7 @@ public class Peticion {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                GeneradorLogs.errorLogManager(e);
+                Logs.errorLogManager(e);
             }
         }
         // Devuelve la respuesta y un indicador de fallo
@@ -104,7 +103,7 @@ public class Peticion {
      * @return El precio más bajo como un número de punto flotante. Si la cadena de entrada está vacía, devuelve -1.
      */
     public static float extraerPrecioDeJSON(String input) {
-        if (input.equals("")) {
+        if (input.isEmpty()) {
             // Si la cadena de entrada está vacía, se devuelve -1
             return -1;
         } else {

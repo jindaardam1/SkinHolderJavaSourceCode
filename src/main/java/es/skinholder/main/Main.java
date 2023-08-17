@@ -5,6 +5,7 @@ import es.skinholder.utils.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -21,11 +22,22 @@ public class Main {
         try {
             crearCarpetasNecesarias();
             boolean fin = false;
+            Scanner scanner = new Scanner(in);
+
             while (!fin) {
-                Scanner scanner = new Scanner(in);
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                pinta();
-                int op = scanner.nextInt();
+
+                int op = 0;
+                while (op < 1 || op > 8) {
+                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    pinta();
+                    try {
+                        op = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        Logs.errorLogManager(e);
+                        scanner.nextLine();
+                    }
+                }
+
                 switch (op) {
                     case 1 -> {
                         if (hayItems()) {
@@ -76,13 +88,12 @@ public class Main {
                             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
                         }
                     }
-                    case 8 -> fin = true;
-                    case 11 -> OpcionesDesarrollador.mostrarLogs(); // Opción oculta para el usuario
-                    default -> out.println("Introduce una opción válida");
+                    default -> fin = true;
                 }
+
             }
         } catch (IOException | InterruptedException e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
     public static void mostrarItems() {
@@ -91,10 +102,7 @@ public class Main {
             items.mostrarItems();
             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
-        } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -103,7 +111,7 @@ public class Main {
      */
     private static void pinta() {
         out.println("\u001B[33m" + "*".repeat(90));
-        out.println("*" + " ".repeat(88) + "*");
+        out.println("*" + String.format("%98s", "\u001B[32mv1.0\u001B[33m ") + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("  \u001B[34m______   __    __\u001B[0m      \u001B[32m__    __  _______\u001B[0m  \u001B[0m", 110) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center(" \u001B[34m/      \\ |  \\  /  \\\u001B[0m    \u001B[32m|  \\  |  \\|       \\ \u001B[0m", 106) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("\u001B[34m|  $$$$$$\\| $$ /  $$\u001B[0m \u001B[33m__\u001B[0m \u001B[32m| $$  | $$| $$$$$$$\\\u001B[0m", 115) + "\u001B[33m" + "*");
@@ -160,13 +168,13 @@ public class Main {
         File carpetaItems = new File("Items");
         if (!carpetaItems.exists()) {
             if (carpetaItems.mkdir()) {
-                GeneradorLogs.logManager("DEBUG", "Se ha creado la carpeta Items");
+                Logs.infoLogManager("Se ha creado la carpeta Items");
             }
         }
         File carpetaRegistros = new File("Registros");
         if (!carpetaRegistros.exists()) {
             if (carpetaRegistros.mkdir()) {
-                GeneradorLogs.logManager("DEBUG", "Se ha creado la carpeta Registros");
+                Logs.infoLogManager("Se ha creado la carpeta Registros");
             }
         }
     }

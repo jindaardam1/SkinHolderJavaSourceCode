@@ -74,10 +74,7 @@ public class Items {
                 items.put(nombre, item);
             }
         } catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
-        } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 
@@ -103,10 +100,7 @@ public class Items {
             }
             System.out.println("\u001B[0m");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            GeneradorLogs.errorLogManager(e);
-        } catch (Exception e) {
-            GeneradorLogs.errorLogManager(e);
+            Logs.errorLogManager(e);
         }
     }
 }
