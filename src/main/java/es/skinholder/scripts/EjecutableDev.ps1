@@ -1,3 +1,6 @@
+# Establecer las dimensiones de la consola
+[console]::SetWindowSize(90, 63)
+
 # Actualizar todo desde el repositorio de GitHub
 Write-Host "[31mActualizando los registros desde el repositorio...[0m"
 git pull | Out-Null

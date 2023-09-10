@@ -27,7 +27,7 @@ public class Main {
             while (!fin) {
 
                 int op = 0;
-                while (op < 1 || op > 8) {
+                while (op < 1 || op > 9) {
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                     pinta();
                     try {
@@ -88,7 +88,8 @@ public class Main {
                             new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
                         }
                     }
-                    default -> fin = true;
+                    case 8 -> fin = true;
+                    default -> ConversionDivisas.menuDivisas();
                 }
 
             }
@@ -111,7 +112,7 @@ public class Main {
      */
     private static void pinta() {
         out.println("\u001B[33m" + "*".repeat(90));
-        out.println("*" + String.format("%98s", "\u001B[32mv1.0\u001B[33m ") + "*");
+        out.println("*" + String.format("%98s", "\u001B[32mv1.1\u001B[33m ") + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("  \u001B[34m______   __    __\u001B[0m      \u001B[32m__    __  _______\u001B[0m  \u001B[0m", 110) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center(" \u001B[34m/      \\ |  \\  /  \\\u001B[0m    \u001B[32m|  \\  |  \\|       \\ \u001B[0m", 106) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("\u001B[34m|  $$$$$$\\| $$ /  $$\u001B[0m \u001B[33m__\u001B[0m \u001B[32m| $$  | $$| $$$$$$$\\\u001B[0m", 115) + "\u001B[33m" + "*");
@@ -161,7 +162,25 @@ public class Main {
         out.println("*" + " ".repeat(88) + "*");
         out.println("*\u001B[0m" + StringUtils.center("\u001B[31m8 - Salir\u001B[0m", 97) + "\u001B[33m*");
         out.println("*" + " ".repeat(88) + "*");
+        out.println("*".repeat(90) + "\n");
+
+        out.println("*".repeat(90));
+        out.println("*" + " ".repeat(35) + "*" + " ".repeat(52) + "*");
+        conexionYCDivisas();
+        out.println("*" + " ".repeat(35) + "*" + " ".repeat(52) + "*");
         out.println("*".repeat(90) + "\u001B[0m");
+    }
+
+    private static void conexionYCDivisas() {
+        int ping = Conexiones.hayConexion("www.xe.com");
+
+        out.println("*" + StringUtils.center(Conexiones.calidadCon(ping), 45) + "*" + StringUtils.center("\u001B[34m9 - Conversión de divisas\u001B[33m", 62) + "*");
+        out.println("*" + " ".repeat(35) + "*" + " ".repeat(52) + "*");
+        out.println("*" + StringUtils.center(Conexiones.calidadPing(ping) + "Ping: " + ping + "\u001B[33m", 45)
+                + "*" + StringUtils.center("\u001B[32m1 EURO = " + ConversionDivisas.codigoACambio(Conexiones.getCodigoFuente("https://www.xe.com/es/currencyconverter/convert/?Amount=1&From=EUR&To=CNY")) + " YUANES\u001B[33m", 62) + "*");
+        out.println("*" + " ".repeat(35) + "*" + " ".repeat(52) + "*");
+        out.println("*" + StringUtils.center("\u001B[34mHost: www.xe.com\u001B[33m", 45)
+                + "*" + StringUtils.center("\u001B[31m1 YUAN = " + ConversionDivisas.codigoACambio(Conexiones.getCodigoFuente("https://www.xe.com/es/currencyconverter/convert/?Amount=1&From=CNY&To=EUR")) + " EUROS\u001B[33m", 62) + "*");
     }
 
     private static void crearCarpetasNecesarias() {
