@@ -7,7 +7,20 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.net.InetAddress;
 
+/**
+ * @author jagobainda
+ *
+ * La clase Conexiones proporciona métodos para verificar la disponibilidad de conexiones de red
+ * y recuperar el código fuente de una página web.
+ */
 public class Conexiones {
+
+    /**
+     * Comprueba si hay una conexión a un host específico y mide el tiempo de respuesta en milisegundos.
+     *
+     * @param host El nombre del host o dirección IP a comprobar.
+     * @return El tiempo de respuesta en milisegundos si la conexión es exitosa, o -1 si no se puede establecer la conexión.
+     */
     public static int hayConexion(String host) {
         long startTime = System.currentTimeMillis();
         try {
@@ -23,6 +36,12 @@ public class Conexiones {
         return -1; // -1 indica que no hubo conexión
     }
 
+    /**
+     * Devuelve una cadena que indica la calidad de la conexión en función del tiempo de ping.
+     *
+     * @param ping El tiempo de respuesta en milisegundos.
+     * @return Una cadena que describe la calidad de la conexión con colores ANSI.
+     */
     public static String calidadCon(int ping) {
         if (ping == -1) {
             Logs.infoLogManager("No hay conexión");
@@ -39,6 +58,12 @@ public class Conexiones {
         }
     }
 
+    /**
+     * Devuelve una cadena de colores ANSI para representar la calidad del ping.
+     *
+     * @param ping El tiempo de respuesta en milisegundos.
+     * @return Una cadena de colores ANSI que indica la calidad del ping.
+     */
     public static String calidadPing(int ping) {
         if (ping == -1) {
             return "\u001B[31m";
@@ -51,6 +76,12 @@ public class Conexiones {
         }
     }
 
+    /**
+     * Obtiene el código fuente de una página web dada una URL.
+     *
+     * @param url La URL de la página web a recuperar.
+     * @return El código fuente de la página web o null en caso de error.
+     */
     public static String getCodigoFuente(String url) {
         try {
             Connection.Response response = Jsoup.connect(url)

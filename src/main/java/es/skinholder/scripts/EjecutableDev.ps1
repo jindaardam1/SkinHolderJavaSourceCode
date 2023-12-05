@@ -1,5 +1,5 @@
 # Establecer las dimensiones de la consola
-[console]::SetWindowSize(90, 63)
+[console]::SetWindowSize(91, 63)
 
 # Actualizar todo desde el repositorio de GitHub
 Write-Host "[31mActualizando los registros desde el repositorio...[0m"
@@ -14,7 +14,7 @@ chcp 65001 | Out-Null
 # Ejecutar el JAR
 java -jar ProyectoSteamAPI.jar
 
-cls
+Clear-Host
 Write-Host "[31mActualizando los registros con el repositorio...[0m"
 # Añadir todos los nuevos registros al repositorio
 git add * | Out-Null
