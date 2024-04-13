@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +29,7 @@ public class ConversionDivisas {
     public static double codigoACambio(String codigo) {
         // Parsear el código HTML utilizando Jsoup
         Document document = Jsoup.parse(codigo);
-        Element pElement = document.selectFirst("p.result__BigRate-sc-1bsijpp-1.dPdXSB");
+        Element pElement = document.selectFirst("p.sc-36218086-1.kibMZh");
 
         if (pElement != null) {
             String text = pElement.text();
@@ -53,38 +52,34 @@ public class ConversionDivisas {
      * Muestra un menú de conversiones de divisas en la consola.
      */
     public static void menuDivisas() {
-        try {
-            // Limpiar la consola
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        // Limpiar la consola
+        AccionesPS.limpiarConsola();
 
-            // Calcular tasas y obtener pares de divisas
-            ArrayList<Double> tasas = calcularTasas(conseguirEnlaces());
-            ArrayList<ParDivisas> divisas = obtenerDivisas();
+        // Calcular tasas y obtener pares de divisas
+        ArrayList<Double> tasas = calcularTasas(conseguirEnlaces());
+        ArrayList<ParDivisas> divisas = obtenerDivisas();
 
-            // Mostrar tasas y pares de divisas
-            for (int i = 0; i < tasas.size(); i += 2) {
-                System.out.println("\u001B[34m" + "*".repeat(90));
-                System.out.println("*" + " ".repeat(88) + "*");
-                System.out.println("*\u001B[0m" + StringUtils.center("\u001B[32m1 " + divisas.get(i).ENTRADA()
-                        + " = " + tasas.get(i) + " " + divisas.get(i).SALIDA() + "\u001B[0m", 97) + "\u001B[34m*");
-                System.out.println("*" + " ".repeat(88) + "*");
-                System.out.println("*\u001B[0m" + StringUtils.center("\u001B[31m1 " + divisas.get(i + 1).ENTRADA()
-                        + " = " + tasas.get(i + 1) + " " + divisas.get(i + 1).SALIDA() + "\u001B[0m", 97) + "\u001B[34m*");
-                System.out.println("*" + " ".repeat(88) + "*");
-                System.out.println("\u001B[34m" + "*".repeat(90) + "\n");
-            }
-
-            // Mostrar fuente y pausar la consola
+        // Mostrar tasas y pares de divisas
+        for (int i = 0; i < tasas.size(); i += 2) {
             System.out.println("\u001B[34m" + "*".repeat(90));
             System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("*\u001B[33m" + StringUtils.center("Fuente: www.xe.com", 88) + "\u001B[34m*");
+            System.out.println("*\u001B[0m" + StringUtils.center("\u001B[32m1 " + divisas.get(i).ENTRADA()
+                    + " = " + tasas.get(i) + " " + divisas.get(i).SALIDA() + "\u001B[0m", 97) + "\u001B[34m*");
             System.out.println("*" + " ".repeat(88) + "*");
-            System.out.println("\u001B[34m" + "*".repeat(90) + "\u001B[0m");
-
-            new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            Logs.errorLogManager(e);
+            System.out.println("*\u001B[0m" + StringUtils.center("\u001B[31m1 " + divisas.get(i + 1).ENTRADA()
+                    + " = " + tasas.get(i + 1) + " " + divisas.get(i + 1).SALIDA() + "\u001B[0m", 97) + "\u001B[34m*");
+            System.out.println("*" + " ".repeat(88) + "*");
+            System.out.println("\u001B[34m" + "*".repeat(90) + "\n");
         }
+
+        // Mostrar fuente y pausar la consola
+        System.out.println("\u001B[34m" + "*".repeat(90));
+        System.out.println("*" + " ".repeat(88) + "*");
+        System.out.println("*\u001B[33m" + StringUtils.center("Fuente: www.xe.com", 88) + "\u001B[34m*");
+        System.out.println("*" + " ".repeat(88) + "*");
+        System.out.println("\u001B[34m" + "*".repeat(90) + "\u001B[0m");
+
+        AccionesPS.pausarConsola();
     }
 
     /**
