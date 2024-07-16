@@ -30,7 +30,7 @@ public class ConversionDivisas {
     public static double codigoACambio(String codigo) {
         // Parsear el código HTML utilizando Jsoup
         Document document = Jsoup.parse(codigo);
-        Element pElement = document.selectFirst("p.result__BigRate-sc-1bsijpp-1.dPdXSB");
+        Element pElement = document.selectFirst("p.sc-295edd9f-1.jqMUXt");
 
         if (pElement != null) {
             String text = pElement.text();
