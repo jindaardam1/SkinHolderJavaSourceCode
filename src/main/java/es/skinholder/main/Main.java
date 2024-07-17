@@ -112,7 +112,7 @@ public class Main {
      */
     private static void pinta() {
         out.println("\u001B[33m" + "*".repeat(90));
-        out.println("*" + String.format("%98s", "\u001B[32mv1.2\u001B[33m ") + "*");
+        out.println("*" + String.format("%98s", "\u001B[32mv1.2.2\u001B[33m ") + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("  \u001B[34m______   __    __\u001B[0m      \u001B[32m__    __  _______\u001B[0m  \u001B[0m", 110) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center(" \u001B[34m/      \\ |  \\  /  \\\u001B[0m    \u001B[32m|  \\  |  \\|       \\ \u001B[0m", 106) + "\u001B[33m" + "*");
         out.println("*" + "\u001B[0m" + StringUtils.center("\u001B[34m|  $$$$$$\\| $$ /  $$\u001B[0m \u001B[33m__\u001B[0m \u001B[32m| $$  | $$| $$$$$$$\\\u001B[0m", 115) + "\u001B[33m" + "*");
