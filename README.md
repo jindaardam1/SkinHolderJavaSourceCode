@@ -24,6 +24,10 @@
 <ul>
     <li>Parche para arreglar el scraping de divisas.</li>
 </ul>
+<h2 align="center">Changelog - 1.2.2</h2>
+<ul>
+    <li>Parche para arreglar el scraping de divisas.</li>
+</ul>
 <h2 align="center">Información de contacto</h2>
 <p><img alt="discord" src="https://www.svgrepo.com/show/353655/discord-icon.svg" height="15px"> jagobainda#5551</p>
 <p><img alt="discord" src="https://www.svgrepo.com/show/331550/protonmail.svg" height="15px"> jagobainda@protonmail.com</p>
