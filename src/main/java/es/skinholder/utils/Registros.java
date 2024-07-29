@@ -102,6 +102,8 @@ public class Registros {
         Comparator<PrecioNombreCantidad> comparator = Comparator.comparing(PrecioNombreCantidad::PRECIO);
         precioNombreCantidadArrayList.sort(comparator.reversed());
 
+        double alVenderEnSteam = total * 0.87;
+
         // Imprime información relevante en consola
         System.out.println("\n\u001B[34m" + "*".repeat(90));
         System.out.println("*" + " ".repeat(88) + "*");
@@ -114,7 +116,7 @@ public class Registros {
         System.out.println("*" + " ".repeat(88) + "*");
         System.out.println("*".repeat(90));
         System.out.println("*" + " ".repeat(88) + "*");
-        System.out.println("*\u001B[0m" + StringUtils.center("Al vender restando la comisión de Steam \u001B[32m" + String.format("%.2f", total * 0.87) + "€\u001B[0m", 97) + "\u001B[34m*");
+        System.out.println("*\u001B[0m" + StringUtils.center("Al vender restando la comisión de Steam \u001B[32m" + String.format("%.2f", alVenderEnSteam) + "€\u001B[0m", 97) + "\u001B[34m*");
         System.out.println("*" + " ".repeat(88) + "*");
         System.out.println("*".repeat(90) + "\u001B[0m\n");
 
