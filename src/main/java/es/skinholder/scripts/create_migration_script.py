@@ -3,11 +3,12 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 # Directorios donde se encuentran los archivos XML
-xml_folder_items = 'C:/Users/Jagoba/Documents/ProgramaSteamInversionesEjecutable/Items'
-xml_folder_registros = 'C:/Users/Jagoba/Documents/ProgramaSteamInversionesEjecutable/Registros'
+xml_folder_items = 'C:/Users/Jagoba/Documents/SkinHolderJavaPersonal/Items'
+xml_folder_registros = 'C:/Users/Jagoba/Documents/SkinHolderJavaPersonal/Registros'
 
 # Ruta al archivo SQL de creación de la base de datos
-sql_creation_file = 'C:/Users/Jagoba/Documents/ProgramaSteamInversionesEjecutable/create_db_mysql.sql'
+sql_creation_file = 'C:/Users/Jagoba/Documents/SkinHolderJavaPersonal/create_db_mysql.sql'
+gamerpay_itemnames_update_file = 'C:/Users/Jagoba/Documents/SkinHolderJavaPersonal/gamerpay_itemnames_update.sql'
 
 def get_hashname_from_url(url):
     start_index = url.find('market_hash_name=') + len('market_hash_name=')
@@ -107,6 +108,12 @@ sql_script += "INSERT INTO ItemPrecio (PrecioSteam, PrecioGamerPay, UserItemID, 
 sql_script += "".join(f"\t({item[0]}, 0, {item[1]}, {item[2]}),\n" for item in sql_item_precio)
 sql_script = sql_script[:-2]
 sql_script += ";\n\n"
+
+# Leer el contenido del del archivo que contiene los nombres de los items en GamerPay
+with open(gamerpay_itemnames_update_file, 'r', encoding='utf-8') as file:
+    gamerpay_itemnames_update_script = file.read()
+
+sql_script += gamerpay_itemnames_update_script
 
 # Mostrar la cantidad de inserciones
 print(f"Inserciones de la tabla Users: {len(sql_users)}")
